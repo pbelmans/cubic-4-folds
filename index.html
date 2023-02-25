@@ -45,7 +45,6 @@ $(document).ready(function() {
       format : "html",
       //prepend (entry) { return `[${entry.id}]: ` },
     });
-    console.log(html);
     $("div#bibliography").append(html);
   }, "text");
 });
@@ -80,8 +79,9 @@ const huybrechts =
 // main script
 $(function() {
   for (var d = 8; d <= D_MAX; d = d + 2) {
-    var row = $("<tr></tr>");
     if (d % 6 == 4) continue;
+
+    var row = $("<tr data-d='" + d + "'></tr>");
 
     row.append("<th>" + d + "</th>");
     row.append("<td data-property='**'  data-d='" + d + "'><span></span></td>");
@@ -91,15 +91,11 @@ $(function() {
     $("table#overview tbody").append(row);
   }
 
-  // inspect all entries in the table
-
-  $("table#overview td[data-property='**']").each(function(i) {
-    const d = $(this).data("d");
-    $(this).addClass( hassett.includes(d) ? "true" : "false" );
+  $("table#overview td[data-property='**']").each(function() {
+    $(this).addClass( hassett.includes($(this).data("d")) ? "true" : "false" );
   });
-  $("table#overview td[data-property='**p']").each(function(i) {
-    const d = $(this).data("d");
-    $(this).addClass( huybrechts.includes(d) ? "true" : "false" );
+  $("table#overview td[data-property='**p']").each(function() {
+    $(this).addClass( huybrechts.includes($(this).data("d")) ? "true" : "false" );
   });
   // TODO rewrite this in Sage...
   const fractions = new Set();
@@ -109,8 +105,21 @@ $(function() {
     }
   }
   $("table#overview td[data-property='***']").each(function(i) {
-    const d = $(this).data("d");
-    $(this).addClass( fractions.has(d) ? "true" : "false" );
+    $(this).addClass( fractions.has($(this).data("d")) ? "true" : "false" );
+  });
+
+  // Kodaira dimension
+  $("thead tr").append("<th>$\\kappa$</th>");
+  $("tr[data-d]").append( function(i, element) {
+    // TODO there must be a cleaner way to determine d
+    const d = $($(element)[0]).text();
+
+    var td = $("<td></td>");
+
+    // TODO source?
+    if (d <= 44) { td.text("$-\\infty$") };
+
+    return td;
   });
 
 });
@@ -133,9 +142,9 @@ TODO
   <table id="overview">
     <thead>
       <th>$d$</th>
-      <th class="stars">$({*}{*})$</th>
-      <th class="stars">$({*}{*}')$</th>
-      <th class="stars">$({*}{*}{*})$</th>
+      <th>$({*}{*})$</th>
+      <th>$({*}{*}')$</th>
+      <th>$({*}{*}{*})$</th>
     </thead>
     <tbody></tbody>
   </table>
