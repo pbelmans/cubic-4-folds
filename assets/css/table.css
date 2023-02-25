@@ -1,0 +1,43 @@
+table#overview {
+  border-collapse: collapse;
+}
+
+tr {
+  height: .9em;
+}
+
+th, td {
+  margin: 0;
+  padding: 0;
+}
+
+th {
+  text-align: center;
+  padding: 0 .3em;
+  font-size: .8em;
+}
+th.stars {
+}
+td[data-property] {
+  text-align: center;
+  padding: 0;
+}
+
+td.true[data-property] {
+}
+td.true span,
+td.false span {
+  opacity: 0.6;
+  display: inline-block;
+  height: .9em;
+  width: 1.5em;
+  padding-top: .5em;
+}
+td.true span {
+  background-color: #2ECC40;
+  border: 1px solid black;
+}
+td.false span {
+  background-color: #FF4136;
+}
+
