@@ -108,6 +108,26 @@ $(function() {
     $(this).addClass( fractions.has($(this).data("d")) ? "true" : "false" );
   });
 
+  // degree of associated (twisted) K3 surface
+  $("thead tr").append("<th>K3</th>");
+  // TODO make a function which adds a cell using `d` as input
+  $("tr[data-d").append( function(i, element) {
+    // TODO there must be a cleaner way to determine d
+    const d = parseInt($($(element)[0]).text());
+
+    var td = $("<td></td>");
+
+    if (hassett.includes(d)) { td.append(d); };
+
+    if (huybrechts.includes(d)) {
+      for (var order = 2; order < d; order++) {
+        if (d % (order*order) == 0) { td.append("(" + d / (order*order) + ", " + order + ")"); };
+      }
+    }
+
+    return td;
+  });
+
   // Kodaira dimension
   $("thead tr").append("<th>$\\kappa$</th>");
   $("tr[data-d]").append( function(i, element) {
