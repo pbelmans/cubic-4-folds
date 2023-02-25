@@ -50,3 +50,9 @@ div#title p#slogan {
   font-size: .9rem;
   margin-bottom: .5rem;
 }
+
+div.csl-entry {
+  display: list-item;
+  list-style-type: circle;
+  margin-left: 1.3em;
+}
