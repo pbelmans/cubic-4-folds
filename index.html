@@ -76,17 +76,27 @@ const huybrechts =
    800, 806, 818, 824, 834, 842, 854, 864, 866, 872, 878, 882, 888, 896,
    906, 914, 926, 936, 938, 942, 950, 962, 968, 974, 978, 992, 998];
 
+function addColumn(label, cell) {
+  $("thead tr").append(`<th>${label}</th>`);
+
+  $("tr[data-d]").append( function(i, element) {
+    // TODO make this a bit cleaner
+    const d = parseInt($($(element)[0]).text());
+    return $("<td>" + cell(d) + "</td>");
+  });
+}
+
 // main script
 $(function() {
   for (var d = 8; d <= D_MAX; d = d + 2) {
     if (d % 6 == 4) continue;
 
-    var row = $("<tr data-d='" + d + "'></tr>");
+    var row = $(`<tr data-d="${d}"></tr>`);
 
-    row.append("<th>" + d + "</th>");
-    row.append("<td data-property='**'  data-d='" + d + "'><span></span></td>");
-    row.append("<td data-property='**p' data-d='" + d + "'><span></span></td>");
-    row.append("<td data-property='***' data-d='" + d + "'><span></span></td>");
+    row.append(`<th>${d}</th>`);
+    row.append(`<td data-property='**'  data-d="${d}"><span></span></td>`);
+    row.append(`<td data-property='**p' data-d="${d}"><span></span></td>`);
+    row.append(`<td data-property='***' data-d="${d}"><span></span></td>`);
 
     $("table#overview tbody").append(row);
   }
@@ -108,40 +118,27 @@ $(function() {
     $(this).addClass( fractions.has($(this).data("d")) ? "true" : "false" );
   });
 
+  // Kodaira dimension
+  addColumn("$\\kappa$", function(d) {
+    if (d <= 44) return "$-\\infty$";
+
+    return "?";
+  });
+
   // degree of associated (twisted) K3 surface
-  $("thead tr").append("<th>K3</th>");
-  // TODO make a function which adds a cell using `d` as input
-  $("tr[data-d").append( function(i, element) {
-    // TODO there must be a cleaner way to determine d
-    const d = parseInt($($(element)[0]).text());
+  addColumn("K3", function(d) {
+    var output = "";
 
-    var td = $("<td></td>");
-
-    if (hassett.includes(d)) { td.append(d); };
+    if (hassett.includes(d)) {  output += d; };
 
     if (huybrechts.includes(d)) {
       for (var order = 2; order < d; order++) {
-        if (d % (order*order) == 0) { td.append("(" + d / (order*order) + ", " + order + ")"); };
+        if (d % (order*order) == 0) { output += "(" + d / (order*order) + ", " + order + ")"; };
       }
     }
 
-    return td;
+    return output;
   });
-
-  // Kodaira dimension
-  $("thead tr").append("<th>$\\kappa$</th>");
-  $("tr[data-d]").append( function(i, element) {
-    // TODO there must be a cleaner way to determine d
-    const d = $($(element)[0]).text();
-
-    var td = $("<td></td>");
-
-    // TODO source?
-    if (d <= 44) { td.text("$-\\infty$") };
-
-    return td;
-  });
-
 });
 
 /*
