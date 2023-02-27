@@ -107,12 +107,23 @@ function addColumn(label, cell) {
   return [$("table#overview thead th:last-child"), $("table#overview tr[data-d] td:last-child")];
 }
 
+function associateReference(d, reference) {
+  if (Array.isArray(d))
+    return d.forEach( d => associateReference(d, reference) );
+  if (Array.isArray(reference))
+    return reference.forEach( reference => associateReference(d, reference) );
+
+  var references = $(`tr[data-d=${d}]`).data("references").concat([reference]);
+  $(`tr[data-d=${d}]`).data("references", references);
+}
+
 // main script
 $(function() {
   for (var d = 8; d <= D_MAX; d = d + 2) {
     if (d % 6 == 4) continue;
 
     var row = $(`<tr data-d="${d}"></tr>`);
+    row.data("references", []);
 
     row.append(`<th>${d}</th>`);
 
@@ -125,6 +136,25 @@ $(function() {
 
     $("table#overview tbody").append(row);
   }
+
+  // adding an event handler to highlight references
+  $("tr[data-d] th, tr[data-d] td.stars").css("cursor", "pointer");
+  $("tr[data-d] th, tr[data-d] td.stars").click(function() {
+    // toggling
+    if ($(this).parent().hasClass("active"))
+      $(this).parent().removeClass("active");
+    // new selection
+    else {
+      $("tr[data-d]").removeClass("active");
+      $(this).parent().addClass("active")
+    }
+
+    // changing bibliography layout
+    $("div.csl-entry").removeClass("active");
+    $(this).parent().data("references").forEach(
+      reference => $(`div[data-csl-entry-id=${reference}]`).addClass("active")
+    );
+  });
 
   // adding the input for increasing number of rows
   $("table#overview")
@@ -180,6 +210,9 @@ $(function() {
     return [degrees.join(", "), ""];
   });
   cells.addClass("text-center");
+
+  // associating papers to certain degrees
+  associateReference(26, "MR3760746");
 });
 
 </script>

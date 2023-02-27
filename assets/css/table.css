@@ -1,5 +1,4 @@
 table#overview {
-  border-collapse: collapse;
 }
 
 tr {
@@ -45,3 +44,8 @@ td.false span {
   background-color: #FF4136;
 }
 
+tr[data-d] {
+}
+tr[data-d].active {
+  background-color: #ddd;
+}

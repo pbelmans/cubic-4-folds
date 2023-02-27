@@ -57,3 +57,7 @@ div.csl-entry {
   margin-left: 1.3em;
   margin-bottom: .3em;
 }
+
+div.csl-entry.active {
+  background-color: #ddd;
+}
