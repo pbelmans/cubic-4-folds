@@ -111,28 +111,22 @@ $(function() {
     var row = $(`<tr data-d="${d}"></tr>`);
 
     row.append(`<th>${d}</th>`);
-    row.append(`<td data-property='**'  data-d="${d}"><span></span></td>`);
-    row.append(`<td data-property='**p' data-d="${d}"><span></span></td>`);
-    row.append(`<td data-property='***' data-d="${d}"><span></span></td>`);
+
+    row.append($(`<td class="stars" data-property='**'><span></span></td>`)
+      .addClass( hassett.includes(d) ? "true" : "false" ));
+    row.append($(`<td class="stars" data-property='**p'><span></span></td>`)
+      .addClass( huybrechts.includes(d) ? "true" : "false" ));
+    row.append($(`<td class="stars" data-property='***'><span></span></td>`)
+      .addClass( addington.includes(d) ? "true" : "false" ));
 
     $("table#overview tbody").append(row);
   }
 
-  // the three numerical properties
-  $("table#overview td[data-property='**']").each(function() {
-    $(this).addClass( hassett.includes($(this).data("d")) ? "true" : "false" );
-  });
-  $("table#overview td[data-property='**p']").each(function() {
-    $(this).addClass( huybrechts.includes($(this).data("d")) ? "true" : "false" );
-  });
-  $("table#overview td[data-property='***']").each(function() {
-    $(this).addClass( addington.includes($(this).data("d")) ? "true" : "false" );
-  });
-
   // adding the input for increasing number of rows
   $("table#overview")
-    .before("<label for='column'>Number of rows:</label> ")
-    .before(`<input type="number" id="rows" name="rows" min="50" max="1000" step="2" value="${D_MAX_DISPLAY}">`);
+    .before(`<label for='column'>Number of rows:</label>&emsp;`)
+    .before(`<input type="number" id="rows" name="rows" min="20" max="1000" step="2" value="${D_MAX_DISPLAY}">`)
+    .before(`&ensp;(20&ndash;1000)`);
 
   // update the number of rows shown
   function changeNumberOfRows(n) {
@@ -164,7 +158,7 @@ $(function() {
   cells.addClass("text-center");
 
   // column: degree of associated (twisted) K3 surface
-  var [heading, cells] = addColumn("K3", function(d) {
+  var [heading, cells] = addColumn("degree (twisted) K3", function(d) {
     var degrees = [];
     if (hassett.includes(d)) { degrees.push(`$${d}$`); };
 
@@ -184,10 +178,6 @@ $(function() {
   cells.addClass("text-center");
 });
 
-/*
-TODO
-
-*/
 </script>
 
 </head>

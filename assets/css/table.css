@@ -19,7 +19,8 @@ th {
 td {
   font-size: .9em;
 }
-th.stars {
+table#overview td:not(.stars) {
+  padding: 0 1em;
 }
 td[data-property] {
   text-align: center;
