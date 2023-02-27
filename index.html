@@ -50,7 +50,7 @@ $(document).ready(function() {
 });
 
 
-const D_MAX = 150;
+const D_MAX = 100;
 
 // Hasssett's (*)
 const hassett =
@@ -77,13 +77,16 @@ const huybrechts =
    906, 914, 926, 936, 938, 942, 950, 962, 968, 974, 978, 992, 998];
 
 function addColumn(label, cell) {
-  $("thead tr").append(`<th>${label}</th>`);
+  $("table#overview thead tr").append(`<th>${label}</th>`);
 
-  $("tr[data-d]").append( function(i, element) {
+  $("table#overview tr[data-d]").append( function(i, element) {
     // TODO make this a bit cleaner
     const d = parseInt($($(element)[0]).text());
-    return $("<td>" + cell(d) + "</td>");
+    [value, reference] = cell(d);
+    return $("<td>" + value + "</td>");
   });
+
+  return [$("table#overview thead th:last-child"), $("table#overview tr[data-d] td:last-child")];
 }
 
 // main script
@@ -101,6 +104,7 @@ $(function() {
     $("table#overview tbody").append(row);
   }
 
+  // the three numerical properties
   $("table#overview td[data-property='**']").each(function() {
     $(this).addClass( hassett.includes($(this).data("d")) ? "true" : "false" );
   });
@@ -119,26 +123,35 @@ $(function() {
   });
 
   // Kodaira dimension
-  addColumn("$\\kappa$", function(d) {
-    if (d <= 44) return "$-\\infty$";
+  var [heading, cells] = addColumn("$\\kappa$", function(d) {
+    if (d <= 44) return ["$-\\infty$", ""];
 
-    return "?";
+    return [" ", ""];
   });
+  cells.addClass("text-center");
 
   // degree of associated (twisted) K3 surface
-  addColumn("K3", function(d) {
+  var [heading, cells] = addColumn("K3", function(d) {
     var output = "";
 
     if (hassett.includes(d)) {  output += d; };
 
     if (huybrechts.includes(d)) {
-      for (var order = 2; order < d; order++) {
-        if (d % (order*order) == 0) { output += "(" + d / (order*order) + ", " + order + ")"; };
+      // any d in huybrechts can be written as k^2e
+      // for some e in hassett (where degree 2 and 6 are allowed)
+      for (var k = 2; k < d; k++) {
+        if (d % (k*k) != 0) continue;
+        const e = d / (k*k);
+
+        if ([2, 6].concat(hassett).includes(e)) {
+          output += "(" + e + ", " + k + ")";
+        };
       }
     }
 
-    return output;
+    return [output, ""];
   });
+  cells.addClass("text-center");
 });
 
 /*
