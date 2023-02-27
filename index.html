@@ -35,19 +35,23 @@ window.MathJax = {
 
 <script type="text/javascript">
 
-const Cite = require('citation-js')
-const config = Cite.plugins.config.get("@bibtex")
+const Cite = require("citation-js")
 
 $(document).ready(function() {
   $.get("/assets/bibtex/bibliography.bib", function(str) {
     const bibliography = new Cite(str);
     const html = bibliography.format("bibliography", {
       format : "html",
-      //prepend (entry) { return `[${entry.id}]: ` },
     });
-    $("div#bibliography").append(html);
+    $("div#bibliography").append(linkify(html));
   }, "text");
 });
+
+// modified from https://stackoverflow.com/questions/49634850/convert-plain-text-links-to-clickable-links
+function linkify(input) {
+    const pattern = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+    return input.replace(pattern, '<a href="$1">$1</a>');
+}
 
 
 const D_MAX_DISPLAY = 100;
