@@ -177,9 +177,9 @@ $(function() {
 
     // general type results
     if (d % 6 == 0 && d > 6*18 && ![20, 22, 23, 25, 30, 32].includes(d / 6))
-      return ["$20$", "MR3975644"];
+      return ["$19$", "MR3975644"];
     if (d % 6 == 2 && d > 6*18 + 2 && ![20, 21, 25].includes((d - 2) / 6))
-      return ["$20$", "MR3975644"];
+      return ["$19$", "MR3975644"];
     // non-negative results: do these after the general type results from same paper
     if (d % 6 == 0 && d > 6*16 && ![18, 20, 22, 30].includes(d / 6))
       return ["$\\geq0$", "MR3975644"];
