@@ -137,6 +137,8 @@ $(function() {
       .addClass( hassett.includes(d) ? "true" : "false" ));
     row.append($(`<td class="stars" data-property='***'><span></span></td>`)
       .addClass( addington.includes(d) ? "true" : "false" ));
+    row.append($(`<td class="stars" data-property='**pp'><span></span></td>`)
+      .addClass( Number.isInteger(Math.sqrt(d / 2)) ? "true" : "false" ));
 
     $("table#overview tbody").append(row);
   }
@@ -299,6 +301,7 @@ $(function() {
       <th>$({*}{*}')$</th>
       <th>$({*}{*})$</th>
       <th>$({*}{*}{*})$</th>
+      <th>$({*}{*}'')$</th>
     </thead>
     <tbody></tbody>
   </table>
@@ -357,12 +360,23 @@ $(function() {
       $\mathrm{F}(X)$ is birational to $\operatorname{Hilb}^2S$
       <p>introduced in <a href="#references" data-reference="MR3512874">Addington (2016)</a>
     </dd>
+
+    <dt class="col-2 text-right">$({*}{*}'')$</dt>
+    <dd class="col-10">
+      <p>condition for a rational Lagrangian fibration
+      <p>$d$ satisfies $({*})$
+      and in the prime factorisation $d/2=\prod p_i^{n_i}$ one has $n_i\equiv0\pmod2$ for all primes $p_i$
+      <p>equivalently, $d=2a^2$ for some $a\in\mathbb{Z}$
+      <p>the Fano variety of lines $\mathrm{F}(X)$ admits a rational Lagrangian fibration
+      <p>featured in <a href="#references" data-reference="2501.03534">Bottini&ndash;Huybrechts (2025)</a>
+    </dd>
   </dl>
 
   <p>We have that
   \[
-    ({*}{*}{*})\Rightarrow({*}{*})\Rightarrow({*}{*}')
+    ({*}{*}{*})\Rightarrow({*}{*})\Rightarrow({*}{*}')\Leftarrow({*}{*}'')
   \]
+  where $({*}{*}'')$ is incomparable with $({*}{*})$ and $({*}{*}{*})$.
 
   <p>In the column for the degree of the (twisted) K3 surface,
   an entry $e\ (k)$ denotes the degree of the K3 surface (the order of the Brauer class).

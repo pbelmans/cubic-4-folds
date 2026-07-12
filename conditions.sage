@@ -19,6 +19,13 @@ huybrechts = [d for d in nonempty if all(n % 2 == 0 for (p, n) in factor(d // 2)
 print("huybrechts:", huybrechts)
 
 """
+(**''), condition for a rational Lagrangian fibration on F(X)
+featured in arXiv:2501.03534
+"""
+lagrangian = [d for d in nonempty if is_square(d // 2)]
+print("lagrangian:", lagrangian)
+
+"""
 number of FM partners of the K3 category of a very general member of C_d
 Theorem 1.1 of arXiv:2307.14486
 """
