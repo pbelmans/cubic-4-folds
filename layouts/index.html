@@ -128,10 +128,10 @@ $(function() {
 
     row.append(`<th>${d}</th>`);
 
-    row.append($(`<td class="stars" data-property='**'><span></span></td>`)
-      .addClass( hassett.includes(d) ? "true" : "false" ));
     row.append($(`<td class="stars" data-property='**p'><span></span></td>`)
       .addClass( huybrechts.includes(d) ? "true" : "false" ));
+    row.append($(`<td class="stars" data-property='**'><span></span></td>`)
+      .addClass( hassett.includes(d) ? "true" : "false" ));
     row.append($(`<td class="stars" data-property='***'><span></span></td>`)
       .addClass( addington.includes(d) ? "true" : "false" ));
 
@@ -229,8 +229,8 @@ $(function() {
   <table id="overview">
     <thead>
       <th>$d$</th>
-      <th>$({*}{*})$</th>
       <th>$({*}{*}')$</th>
+      <th>$({*}{*})$</th>
       <th>$({*}{*}{*})$</th>
     </thead>
     <tbody></tbody>
@@ -247,6 +247,15 @@ $(function() {
       <p>$d$ satisfied $d\geq 8$ and $d\equiv 0,2\pmod 6$
     </dd>
 
+    <dt class="col-2 text-right">$({*}{*}')$</dt>
+    <dd class="col-10">
+      <p>Huybrechts' condition for an associated K3 twisted surface
+      <p>$d$ satisfies $({*})$
+      and in the prime factorisation $d/2=\prod p_i^{n_i}$ one has $n_i\equiv0\pmod2$ for all primes $p_i\equiv2\pmod3$
+      <p>there exists a K3 surface $S$ and a Brauer class $\alpha\in\operatorname{Br}(S)$
+      such that $\widetilde{\operatorname{H}}(X,\mathbb{Z})\cong\widetilde{\operatorname{H}}(S,\alpha,\mathbb{Z})$
+    </dd>
+
     <dt class="col-2 text-right">$({*}{*})$</dt>
     <dd class="col-10">
       <p>Hassett's condition for an associated K3 surface
@@ -256,15 +265,6 @@ $(function() {
       such that $\widetilde{\operatorname{H}}(X,\mathbb{Z})\cong\widetilde{\operatorname{H}}(S,\mathbb{Z})$
       <p>there exists a K3 surface $S$ such that
       $S$ is birational to a moduli space of stable sheaves on $S$
-    </dd>
-
-    <dt class="col-2 text-right">$({*}{*}')$</dt>
-    <dd class="col-10">
-      <p>Huybrechts' condition for an associated K3 twisted surface
-      <p>$d$ satisfies $({*})$
-      and in the prime factorisation $d/2=\prod p_i^{n_i}$ one has $n_i\equiv0\pmod2$ for all primes $p_i\equiv2\pmod3$
-      <p>there exists a K3 surface $S$ and a Brauer class $\alpha\in\operatorname{Br}(S)$
-      such that $\widetilde{\operatorname{H}}(X,\mathbb{Z})\cong\widetilde{\operatorname{H}}(S,\alpha,\mathbb{Z})$
     </dd>
 
     <dt class="col-2 text-right">$({*}{*}{*})$</dt>
