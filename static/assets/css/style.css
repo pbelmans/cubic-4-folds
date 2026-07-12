@@ -51,6 +51,14 @@ div#title p#slogan {
   margin-bottom: .5rem;
 }
 
+dl dd p {
+  margin-bottom: .25rem;
+}
+
+dl dd {
+  margin-bottom: 1rem;
+}
+
 div.csl-entry {
   display: list-item;
   list-style-type: circle;
