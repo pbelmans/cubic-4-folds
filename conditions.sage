@@ -26,6 +26,29 @@ lagrangian = [d for d in nonempty if is_square(d // 2)]
 print("lagrangian:", lagrangian)
 
 """
+Noether-Lefschetz degrees of the special cubic divisors C_d in P^55
+Theorem 1 of MR3084431: the generating series is -2 + sum deg(C_d) q^(d/6),
+a modular form of weight 11 and level 3; below q = t^3
+"""
+N = MAX // 2 + 1
+R.<t> = PowerSeriesRing(ZZ, default_prec=N)
+
+def alpha(step):
+    return (1 + 6 * sum(sum(kronecker(k, 3) for k in divisors(n)) * t^(step * n)
+                        for n in range(1, N // step + 1))).O(N)
+
+def beta(step):
+    return sum(sum((n // k)^2 * kronecker(k, 3) for k in divisors(n)) * t^(step * n)
+               for n in range(1, N // step + 1)).O(N)
+
+A, B, a, b = alpha(3), beta(3), alpha(1), beta(1)
+theta = (-A^11 + 162*A^8*B + 91854*A^5*B^2 + 2204496*A^2*B^3
+         - a^11 + 66*a^8*b - 1386*a^5*b^2 + 9072*a^2*b^3)
+# values from (3.11) in MR3084431; the introduction misprints 917568 as 915678
+assert [theta[0], theta[3], theta[4], theta[6], theta[7]] == [-2, 192, 3402, 196272, 917568]
+print("noether-lefschetz:", {d: theta[d // 2] for d in nonempty if theta[d // 2] <= 10000})
+
+"""
 number of FM partners of the K3 category of a very general member of C_d
 Theorem 1.1 of arXiv:2307.14486
 """
