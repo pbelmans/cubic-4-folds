@@ -101,6 +101,7 @@ function addColumn(label, cell) {
     // TODO make this a bit cleaner
     const d = parseInt($($(element)[0]).text());
     [value, reference] = cell(d);
+    if (reference != "") associateReference(d, reference);
     return $(`<td>${value}</td>`);
   });
 
