@@ -204,7 +204,7 @@ $(function() {
         if (d % (k*k) != 0) continue;
 
         const e = d / (k*k);
-        if ([2, 6].concat(hassett).includes(e)) degrees.push(`$(${e},${k})$`);
+        if ([2, 6].concat(hassett).includes(e)) degrees.push(`$${e}\\ (${k})$`);
       }
     }
 
@@ -281,6 +281,9 @@ $(function() {
   \[
     ({*}{*}{*})\Rightarrow({*}{*})\Rightarrow({*}{*}')
   \]
+
+  <p>In the column for the degree of the (twisted) K3 surface,
+  an entry $e\ (k)$ denotes the degree of the K3 surface (the order of the Brauer class).
 
 
   <h3 id="about">About</h3>
