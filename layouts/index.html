@@ -153,7 +153,7 @@ $(function() {
     // changing bibliography layout
     $("div.csl-entry").removeClass("active");
     $(this).parent().data("references").forEach(
-      reference => $(`div[data-csl-entry-id=${reference}]`).addClass("active")
+      reference => $(`div[data-csl-entry-id="${reference}"]`).addClass("active")
     );
   });
 
@@ -209,6 +209,26 @@ $(function() {
     }
 
     return [degrees.join(", "), ""];
+  });
+  cells.addClass("text-center");
+
+  // column: number of FM partners of the K3 category of a very general member of C_d
+  // Theorem 1.1 of arXiv:2307.14486; the number of square roots of unity in Z/2d
+  // is 2^(k+1) or 2^(k+2) for k the number of distinct odd prime factors of d
+  var [heading, cells] = addColumn("$\\#\\operatorname{FM}$", function(d) {
+    var k = 0, m = d;
+    while (m % 2 == 0) m /= 2;
+    for (var p = 3; p <= m; p += 2)
+      if (m % p == 0) { k++; while (m % p == 0) m /= p; }
+    const N = 2**(d % 4 == 0 ? k + 2 : k + 1);
+
+    var count;
+    if (d % 3 != 0) count = N / 4;
+    else if (d % 9 != 0) count = N / 8;
+    else if (d % 27 == 0) count = 3 * N / 4;
+    else count = (d / 18) % 3 == 1 ? N / 4 : N / 2;
+
+    return [`$${count}$`, "2307.14486"];
   });
   cells.addClass("text-center");
 
@@ -319,6 +339,9 @@ $(function() {
 
   <p>In the column for the degree of the (twisted) K3 surface,
   an entry $e\ (k)$ denotes the degree of the K3 surface (the order of the Brauer class).
+
+  <p>The column $\#\operatorname{FM}$ gives the number of isomorphism classes of Fourier&ndash;Mukai partners
+  of the K3 category of a very general element of $\mathcal{C}_d$.
 
   <p>A checkmark in the column <em>rational</em> indicates that
   every smooth cubic fourfold in $\mathcal{C}_d$ is known to be rational.
