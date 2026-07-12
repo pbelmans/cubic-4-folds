@@ -212,6 +212,20 @@ $(function() {
   });
   cells.addClass("text-center");
 
+  // column: rationality of every smooth member of C_d
+  var [heading, cells] = addColumn("rational", function(d) {
+    const rational = {
+      14: "MR0010433",
+      26: "MR3934590",
+      38: "MR3934590",
+      42: "MR4592873",
+    };
+    if (d in rational) return ["&#10003;", rational[d]];
+
+    return [" ", ""];
+  });
+  cells.addClass("text-center");
+
   // associating papers to certain degrees
   associateReference(26, "MR3760746");
 });
@@ -284,6 +298,10 @@ $(function() {
 
   <p>In the column for the degree of the (twisted) K3 surface,
   an entry $e\ (k)$ denotes the degree of the K3 surface (the order of the Brauer class).
+
+  <p>A checkmark in the column <em>rational</em> indicates that
+  every smooth cubic fourfold in $\mathcal{C}_d$ is known to be rational.
+  Conjecturally these are precisely the ones satisfying $({*}{*})$.
 
 
   <h3 id="about">About</h3>
