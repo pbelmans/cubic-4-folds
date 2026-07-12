@@ -1,0 +1,4 @@
+baseURL = 'https://cubics.fanography.info/'
+locale = 'en'
+title = 'Cubic 4-folds'
+disableKinds = ['taxonomy', 'term', 'rss', 'sitemap']
