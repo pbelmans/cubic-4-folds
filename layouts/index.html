@@ -226,6 +226,27 @@ $(function() {
   });
   cells.addClass("text-center");
 
+  // column: surface contained in the generic member of C_d, with (h^2.S, S^2)
+  var [heading, cells] = addColumn("contains", function(d) {
+    const surfaces = {
+      8:  ["plane $(1,3)$", "MR1738215"],
+      12: ["cubic scroll $(3,7)$", "MR1738215"],
+      14: ["quartic scroll $(4,10)$, quintic del Pezzo $(5,13)$", "MR1738215"],
+      18: ["$\\operatorname{Bl}_{12}\\mathbb{P}^2$ $(9,33)$", "MR3652080"],
+      20: ["Veronese surface $(4,12)$", "MR1738215"],
+      24: ["$\\operatorname{Bl}_{11}\\mathbb{P}^2$ $(9,35)$", "MR3652080"],
+      26: ["$\\operatorname{Bl}_{12}\\mathbb{P}^2$ $(10,42)$", "MR3652080"],
+      30: ["$\\operatorname{Bl}_{10}\\mathbb{P}^2$ $(9,37)$", "MR3652080"],
+      32: ["$\\operatorname{Bl}_{11}\\mathbb{P}^2$ $(10,44)$", "MR3652080"],
+      36: ["$\\operatorname{Bl}_{12}\\mathbb{P}^2$ $(12,60)$", "MR3652080"],
+      38: ["$\\operatorname{Bl}_{10}\\mathbb{P}^2$ $(10,46)$", "MR3652080"],
+      44: ["Fano model of an Enriques surface $(10,48)$", "MR3652080"],
+    };
+    if (d in surfaces) return surfaces[d];
+
+    return [" ", ""];
+  });
+
   // associating papers to certain degrees
   associateReference(26, "MR3760746");
 });
@@ -302,6 +323,11 @@ $(function() {
   <p>A checkmark in the column <em>rational</em> indicates that
   every smooth cubic fourfold in $\mathcal{C}_d$ is known to be rational.
   Conjecturally these are precisely the ones satisfying $({*}{*})$.
+
+  <p>The column <em>contains</em> describes a surface $S$ contained in the generic element
+  of $\mathcal{C}_d$, together with the pair $(h^2\cdot S, S^2)$ giving its degree and self-intersection.
+  Here $\operatorname{Bl}_p\mathbb{P}^2$ denotes the blowup of $\mathbb{P}^2$ in $p$ generic points,
+  embedded by an explicit linear system as in Nuer's table of smooth rational surfaces.
 
 
   <h3 id="about">About</h3>
