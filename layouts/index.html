@@ -20,18 +20,9 @@
 
   <script defer data-domain="cubics.fanography.info" src="https://plausible.io/js/script.js"></script>
 
-  <script>
-window.MathJax = {
-  tex: {
-    inlineMath: [['$','$'], ['\\(','\\)']],
-    packages: ['base', 'ams', 'mathtools', 'color']
-  },
-  loader: {
-    load: ['[tex]/ams', '[tex]/mathtools', '[tex]/color']
-  }
-};
-  </script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css" integrity="sha384-vlBdW0r3AcZO/HboRPznQNowvexd3fY8qHOWkBi5q7KGgqJ+F48+DceybYmrVbmB" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.js" integrity="sha384-AtrdNsnxl/75rvBneBVH7DtOvCxSVahR2zWqle1coBKd8DEmLoviqNeJSx64gNAs" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/contrib/auto-render.min.js" integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous"></script>
 
 <script type="text/javascript">
 
@@ -44,8 +35,20 @@ $(document).ready(function() {
       format : "html",
     });
     $("div#bibliography").append(linkify(html));
+    renderMath($("div#bibliography")[0]);
   }, "text");
 });
+
+// KaTeX is loaded with defer, so it is available once the document is ready
+function renderMath(element) {
+  renderMathInElement(element, {
+    delimiters: [
+      { left: "$", right: "$", display: false },
+      { left: "\\(", right: "\\)", display: false },
+      { left: "\\[", right: "\\]", display: true },
+    ],
+  });
+}
 
 // modified from https://stackoverflow.com/questions/49634850/convert-plain-text-links-to-clickable-links
 function linkify(input) {
@@ -269,6 +272,8 @@ $(function() {
 
   // associating papers to certain degrees
   associateReference(26, "MR3760746");
+
+  renderMath(document.body);
 });
 
 </script>
