@@ -247,7 +247,7 @@ $(function() {
   // column: Noether-Lefschetz degree of the special cubic divisor C_d in P^55
   // Theorem 1 of MR3084431, computed in conditions.sage; only shown up to a cutoff
   var [heading, cells] = addColumn("$\\deg\\mathcal{C}_d$", function(d) {
-    const degrees = {8: 3402}; // values <= 10000; the next ones are 196272 (d=12), 917568 (d=14)
+    const degrees = {8: 3402, 12: 196272, 14: 917568}; // values <= 10^6; the next one is 11327232 (d=18)
     if (d in degrees) return [`$${degrees[d]}$`, "MR3084431"];
 
     return [" ", ""];
@@ -395,7 +395,7 @@ $(function() {
   the number of points, counted with multiplicity, in which a general pencil of cubic fourfolds
   meets the closure of $\mathcal{C}_d$ in $\mathbb{P}^{55}$,
   computed by <a href="#references" data-reference="MR3084431">Li&ndash;Zhang (2013)</a>.
-  It is only displayed when it is at most $10^4$.
+  It is only displayed when it is at most $10^6$.
 
   <p>The column $\#\operatorname{FM}$ gives the number of isomorphism classes of Fourier&ndash;Mukai partners
   of the K3 category of a very general element of $\mathcal{C}_d$.

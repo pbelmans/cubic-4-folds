@@ -46,7 +46,7 @@ theta = (-A^11 + 162*A^8*B + 91854*A^5*B^2 + 2204496*A^2*B^3
          - a^11 + 66*a^8*b - 1386*a^5*b^2 + 9072*a^2*b^3)
 # values from (3.11) in MR3084431; the introduction misprints 917568 as 915678
 assert [theta[0], theta[3], theta[4], theta[6], theta[7]] == [-2, 192, 3402, 196272, 917568]
-print("noether-lefschetz:", {d: theta[d // 2] for d in nonempty if theta[d // 2] <= 10000})
+print("noether-lefschetz:", {d: theta[d // 2] for d in nonempty if theta[d // 2] <= 10^6})
 
 """
 number of FM partners of the K3 category of a very general member of C_d
