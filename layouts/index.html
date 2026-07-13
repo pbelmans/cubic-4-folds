@@ -169,9 +169,9 @@ $(function() {
     $(`div[data-csl-entry-id="${$(this).data("reference")}"]`).addClass("active");
   });
 
-  // adding the input for increasing number of rows
+  // adding the input bounding the discriminants being shown
   $("table#overview")
-    .before(`<label for='column'>Number of rows:</label>&emsp;`)
+    .before(`<label for='rows'>Maximum discriminant:</label>&emsp;`)
     .before(`<input type="number" id="rows" name="rows" min="20" max="1000" step="2" value="${D_MAX_DISPLAY}">`)
     .before(`&ensp;(20&ndash;1000)`);
 
