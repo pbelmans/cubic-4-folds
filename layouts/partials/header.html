@@ -7,6 +7,8 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav">
+      <li class="nav-item ml-3 ml-lg-0"><a class="nav-link py-2" href="/">cubics</a></li>
+      <li class="nav-item ml-3 ml-lg-0"><a class="nav-link py-2" href="/gushel-mukai/">Gushel&ndash;Mukai</a></li>
       <li class="nav-item ml-3 ml-lg-0"><a class="nav-link py-2" href="#about">about</a></li>
 
       <li class="nav-item d-lg-none ml-3 mt-2 text-white">other:</li>
@@ -33,9 +35,7 @@
   </ul>
 </nav>
 <div id="title" class="sticky-top">
-  <h1><a href="/">Cubic 4-folds</a></h1>
+  <h1><a href="{{ .RelPermalink }}">{{ .Title }}</a></h1>
 
-  <p id="slogan">on the relationship between cubic fourfolds and K3 surfaces</p>
+  <p id="slogan">{{ .Params.slogan | default "on the relationship between cubic fourfolds and K3 surfaces" }}</p>
 </div>
-
-

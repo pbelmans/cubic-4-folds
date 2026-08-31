@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ .Title }}</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/citation-js/0.6.7/citation.min.js" integrity="sha512-N+LDFMa9owHXGS+CyMrBvuxq2QuGl3fiB/7cys3aUEL7K6P1soHGqsS0sjHXZpwNd9Kz0m3R4IPy1HYRi6ROEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
+
+  <link href="/assets/css/style.css" rel="stylesheet">
+  <link href="/assets/css/table.css" rel="stylesheet">
+
+  <script defer data-domain="cubics.fanography.info" src="https://plausible.io/js/script.js"></script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.css" integrity="sha384-vlBdW0r3AcZO/HboRPznQNowvexd3fY8qHOWkBi5q7KGgqJ+F48+DceybYmrVbmB" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/katex.min.js" integrity="sha384-AtrdNsnxl/75rvBneBVH7DtOvCxSVahR2zWqle1coBKd8DEmLoviqNeJSx64gNAs" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.17.0/dist/contrib/auto-render.min.js" integrity="sha384-bjyGPfbij8/NDKJhSGZNP/khQVgtHUE5exjm4Ydllo42FwIgYsdLO2lXGmRBf5Mz" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+
+const Cite = require("citation-js")
+
+$(document).ready(function() {
+  $.get("/assets/bibtex/gushel-mukai.bib", function(str) {
+    const bibliography = new Cite(str);
+    const html = bibliography.format("bibliography", {
+      format : "html",
+    });
+    $("div#bibliography").append(linkify(html));
+    renderMath($("div#bibliography")[0]);
+  }, "text");
+});
+
+function renderMath(element) {
+  renderMathInElement(element, {
+    delimiters: [
+      { left: "$", right: "$", display: false },
+      { left: "\\begin{equation}", right: "\\end{equation}", display: true },
+    ],
+  });
+}
+
+function linkify(input) {
+  const pattern = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+  return input.replace(pattern, '<a href="$1">$1</a>');
+}
+
+const D_MAX_DISPLAY = 100;
+const D_MAX = 1000;
+
+function primeFactorization(n) {
+  const factors = [];
+  for (var p = 2; p * p <= n; p++) {
+    if (n % p != 0) continue;
+
+    var exponent = 0;
+    while (n % p == 0) {
+      n /= p;
+      exponent++;
+    }
+    factors.push([p, exponent]);
+  }
+  if (n > 1) factors.push([n, 1]);
+
+  return factors;
+}
+
+function eulerPhi(n) {
+  var result = n;
+  primeFactorization(n).forEach(function([p, exponent]) {
+    result = result / p * (p - 1);
+  });
+  return result;
+}
+
+// Debarre--Iliev--Manivel's condition (**)
+function hasAssociatedK3(d) {
+  if (![2, 4].includes(d % 8)) return false;
+
+  return primeFactorization(d).every(function([p, exponent]) {
+    return p == 2 || p % 4 == 1;
+  });
+}
+
+// Pertusi's condition (**')
+function hasAssociatedTwistedK3(d) {
+  return primeFactorization(d).every(function([p, exponent]) {
+    return p % 4 != 3 || exponent % 2 == 0;
+  });
+}
+
+// Solvability of n^2 - (d/2)a^2 = -1, Pertusi's condition (***)
+function hasHilbertSquare(d) {
+  const m = d / 2;
+  const a0 = Math.floor(Math.sqrt(m));
+  if (a0 * a0 == m) return false;
+
+  var numerator = 0;
+  var denominator = 1;
+  var a = a0;
+  var period = 0;
+  do {
+    numerator = denominator * a - numerator;
+    denominator = (m - numerator * numerator) / denominator;
+    a = Math.floor((a0 + numerator) / denominator);
+    period++;
+  } while (a != 2 * a0);
+
+  return period % 2 == 1;
+}
+
+function twistedK3Presentations(discriminant) {
+  const presentations = [];
+  for (var order = 1; 2 * order * order <= discriminant; order++) {
+    if (discriminant % (order * order) != 0) continue;
+
+    const degree = discriminant / (order * order);
+    if (hasAssociatedK3(degree)) presentations.push({ degree, order });
+  }
+  return presentations;
+}
+
+function twistedFmFibersPerComponent(degree, order) {
+  const tau = primeFactorization(degree / 2).length;
+  return order > 2 && degree == 2
+    ? eulerPhi(order) / 2
+    : eulerPhi(order) * 2**(tau - 1);
+}
+
+function periodKodairaDimension(d) {
+  if ([10, 20, 26, 34].includes(d)) {
+    return ["$-\\infty$", "MR4572452"];
+  }
+  if (d == 44) {
+    return ["$-\\infty$", "MR4572452"];
+  }
+
+  if (d % 8 == 0 && d >= 88) {
+    const m = d / 8;
+    if (![11, 12, 13, 14, 16, 17, 22, 25, 28].includes(m)) {
+      return ["$19$<br><small>general type</small>", "MR4572452"];
+    }
+    if (![14, 16, 22].includes(m)) return ["$\\geq0$", "MR4572452"];
+  }
+
+  if (d % 8 == 2 && d >= 98) {
+    const m = (d - 2) / 8;
+    if (![12, 13, 14, 15, 16, 17, 21, 23].includes(m)) {
+      return ["$19$<br><small>general type</small>", "MR4572452"];
+    }
+    if (![14, 16].includes(m)) return ["$\\geq0$", "MR4572452"];
+  }
+
+  if (d % 8 == 4 && d >= 116) {
+    const m = (d - 4) / 8;
+    if (![15, 17, 21, 25, 27].includes(m)) {
+      return ["$19$<br><small>general type</small>", "MR4572452"];
+    }
+    if (m != 15) return ["$\\geq0$", "MR4572452"];
+  }
+
+  return ['<abbr class="unknown" title="not known">?</abbr>', ""];
+}
+
+function componentKey(d, component) {
+  if (component == "\\prime") return `${d}-prime`;
+  if (component == "\\prime\\prime") return `${d}-double-prime`;
+  return `${d}`;
+}
+
+function addColumn(label, cell) {
+  $("table#overview thead tr").append(`<th>${label}</th>`);
+
+  $("table#overview tr[data-d]").append(function() {
+    const row = $(this);
+    const d = parseInt(row.data("d"));
+    const component = row.data("component");
+    const [value, reference] = cell(d, component);
+    if (reference != "") associateReference(row.data("key"), reference);
+    return $(`<td>${value}</td>`);
+  });
+
+  return [$("table#overview thead th:last-child"), $("table#overview tr[data-d] td:last-child")];
+}
+
+function associateReference(key, reference) {
+  if (Array.isArray(key))
+    return key.forEach(key => associateReference(key, reference));
+  if (Array.isArray(reference))
+    return reference.forEach(reference => associateReference(key, reference));
+
+  const row = $(`tr[data-key="${key}"]`);
+  const references = row.data("references");
+  if (!references.includes(reference)) row.data("references", references.concat([reference]));
+}
+
+$(function() {
+  for (var d = 10; d <= D_MAX; d += 2) {
+    if (![0, 2, 4].includes(d % 8)) continue;
+
+    const components = d % 8 == 2 ? ["\\prime", "\\prime\\prime"] : [""];
+    components.forEach(function(component) {
+      const key = componentKey(d, component);
+      const row = $(`<tr data-d="${d}" data-key="${key}"></tr>`);
+      row.data("d", d);
+      row.data("key", key);
+      row.data("component", component);
+      row.data("references", ["MR3380447"]);
+
+      const exponent = component == "" ? "" : `^{${component}}`;
+      row.append(`<th>$${d}${exponent}$</th>`);
+
+      row.append($("<td class='stars' data-property='**p'><span></span></td>")
+        .addClass(hasAssociatedTwistedK3(d) ? "true" : "false"));
+      row.append($("<td class='stars' data-property='**'><span></span></td>")
+        .addClass(hasAssociatedK3(d) ? "true" : "false"));
+      row.append($("<td class='stars' data-property='***'><span></span></td>")
+        .addClass(hasHilbertSquare(d) ? "true" : "false"));
+
+      $("table#overview tbody").append(row);
+
+      associateReference(key, "MR3999683");
+      if (hasAssociatedTwistedK3(d)) associateReference(key, "MR4383697");
+    });
+  }
+
+  $("tr[data-d] th, tr[data-d] td.stars").css("cursor", "pointer");
+  $("tr[data-d] th, tr[data-d] td.stars").click(function() {
+    if ($(this).parent().hasClass("active"))
+      $(this).parent().removeClass("active");
+    else {
+      $("tr[data-d]").removeClass("active");
+      $(this).parent().addClass("active");
+    }
+
+    $("div.csl-entry").removeClass("active");
+    $(this).parent().data("references").forEach(
+      reference => $(`div[data-csl-entry-id="${reference}"]`).addClass("active")
+    );
+  });
+
+  $("a[data-reference]").click(function() {
+    $("tr[data-d]").removeClass("active");
+    $("div.csl-entry").removeClass("active");
+    $(`div[data-csl-entry-id="${$(this).data("reference")}"]`).addClass("active");
+  });
+
+  $("table#overview")
+    .before(`<label for="rows">Maximum discriminant:</label>&emsp;`)
+    .before(`<input type="number" id="rows" name="rows" min="10" max="1000" step="2" value="${D_MAX_DISPLAY}">`)
+    .before(`&ensp;(10&ndash;1000)`);
+
+  function changeNumberOfRows(n) {
+    $("tr[data-d]").filter(function() { return parseInt($(this).data("d")) <= n; }).show();
+    $("tr[data-d]").filter(function() { return parseInt($(this).data("d")) > n; }).hide();
+  }
+  $("input#rows").bind("change", function() { changeNumberOfRows(parseInt($(this).val())); });
+  $("input#rows").change();
+
+  var [heading, cells] = addColumn("$\\kappa(\\mathcal{GM})$", function(d, component) {
+    if (d == 26 && component == "\\prime\\prime") {
+      return ["$-\\infty$", "MR4516197"];
+    }
+    if (d <= 26) return ["$-\\infty$", "MR4516197"];
+    if (d == 28) return ["$-\\infty$", "MR4830673"];
+    return ['<abbr class="unknown" title="not known">?</abbr>', ""];
+  });
+  cells.addClass("text-center");
+
+  var [heading, cells] = addColumn("$\\kappa(\\mathcal D)$", function(d, component) {
+    return periodKodairaDimension(d);
+  });
+  cells.addClass("text-center");
+
+  var [heading, cells] = addColumn("degree (twisted) K3", function(d, component) {
+    const presentations = twistedK3Presentations(d);
+    if (presentations.length == 0) return ["&mdash;", ""];
+
+    const degrees = presentations.map(function({ degree, order }) {
+      return order == 1 ? `$${degree}$` : `$${degree}\\ (${order})$`;
+    });
+    return [degrees.join(", "), "MR4383697"];
+  });
+  cells.addClass("text-center");
+
+  var [heading, cells] = addColumn("$\\#\\operatorname{FM}$ fibers", function(d, component) {
+    const presentations = twistedK3Presentations(d);
+    if (presentations.length == 0) return ["&mdash;", ""];
+
+    if (hasAssociatedK3(d)) {
+      const tau = primeFactorization(d / 2).length;
+      const componentCount = 2**(tau - 1);
+      if (component == "") return [`$${componentCount}$`, "MR4383697"];
+
+      return [
+        `$${componentCount}\\ (${2 * componentCount}\\text{ total})$`,
+        "MR4383697",
+      ];
+    }
+
+    const bounds = presentations.map(function({ degree, order }) {
+      return twistedFmFibersPerComponent(degree, order);
+    });
+    const componentBound = Math.max(...bounds);
+    if (component == "") return [`$\\geq ${componentBound}$`, "MR4383697"];
+
+    return [
+      `$\\geq ${componentBound}\\ (\\geq ${2 * componentBound}\\text{ total})$`,
+      "MR4383697",
+    ];
+  });
+  cells.addClass("text-center");
+
+  var [heading, cells] = addColumn("contains", function(d, component) {
+    const surfaces = {
+      "10-prime": "$\\tau$-quadric surface",
+      "10-double-prime": "quintic del Pezzo surface",
+      "12": "cubic scroll",
+      "16": "rational surface $(10,4)$",
+      "18-prime": "rational surface $(12,5)$",
+      "18-double-prime": "rational surface $(9,3)$",
+      "20": "rational surface $(9,2)$",
+      "24": "rational surface $(10,3)$",
+      "26-prime": "rational surface $(12,5)$",
+      "28": "rational surface $(11,4)$",
+    };
+    const key = componentKey(d, component);
+    if (key == "26-double-prime") {
+      return ['<abbr class="unknown" title="no generic surface model is known">?</abbr>', "MR4516197"];
+    }
+    if (!(key in surfaces)) return ['<abbr class="unknown" title="not known">?</abbr>', ""];
+
+    return [surfaces[key], d == 28 ? "MR4830673" : "MR4516197"];
+  });
+
+  renderMath(document.body);
+});
+
+</script>
+
+</head>
+
+<body>
+
+{{ partial "header.html" . }}
+
+<div id="content" class="container">
+
+  <div class="table-responsive">
+    <table id="overview">
+    <caption>
+      The $\kappa(\mathcal{GM})$ column concerns the $23$-dimensional GM component;
+      $\kappa(\mathcal D)$ concerns its $19$-dimensional period divisor.
+      They are separate invariants because the GM period map has $4$-dimensional fibers.
+      In the K3 column, $e\ (r)$ means degree&nbsp;$e$ and Brauer order&nbsp;$r$.
+      A Fourier&ndash;Mukai entry $n$ is exact in the untwisted case;
+      $\geq n$ is the strongest lower bound supplied by the displayed twisted presentations.
+      On a primed or double-primed row, the parenthesized number is the total over the two components;
+      the first number is the count in that component.
+      The fibers counted may be empty because the image of the GM period map is not completely known.
+      In the <em>contains</em> column, $(e,g)$ is the degree and sectional genus of a rational surface
+      in the generic ordinary fourfold.
+      An em dash means &ldquo;not applicable&rdquo;; a question mark means that no value or generic surface model is known.
+    </caption>
+    <thead>
+      <tr>
+        <th>$d$</th>
+        <th>$(\ast\ast^{\prime})$</th>
+        <th>$(\ast\ast)$</th>
+        <th>$(\ast\ast\ast)$</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+    </table>
+  </div>
+
+  <h3 id="references">References</h3>
+  <div id="bibliography"></div>
+
+  <h3 id="explanation">Explanation</h3>
+
+  <p>A smooth Gushel&ndash;Mukai fourfold&nbsp;$X$ is <em>Hodge-special</em>
+  if the integral Hodge classes in&nbsp;$\mathrm{H}^4(X,\mathbb{Z})$ contain
+  a primitive rank-$3$ lattice&nbsp;$L_d$ containing the rank-$2$ lattice
+  pulled back from&nbsp;$\operatorname{Gr}(2,5)$.
+  The discriminant of&nbsp;$L_d$ is denoted by&nbsp;$d$.
+  The period map from the $24$-dimensional moduli space of GM fourfolds
+  to the $20$-dimensional period domain is dominant with smooth $4$-dimensional fibers,
+  and the Hodge-special locus is the pullback of a union of Noether&ndash;Lefschetz divisors,
+  as developed in
+  <a href="#references" data-reference="MR3380447">Debarre&ndash;Iliev&ndash;Manivel (2015)</a>.
+
+  <p>The possible discriminants satisfy:</p>
+  <div id="condition-star">
+  \begin{equation}
+  (\ast)\qquad d>8
+  \quad\text{and}\quad
+  d\equiv0,2,4\pmod 8.
+  \end{equation}
+  </div>
+  If&nbsp;$d\equiv0$ or&nbsp;$4\pmod8$, the divisor&nbsp;$\mathcal{GM}_d$ is irreducible.
+  If&nbsp;$d\equiv2\pmod8$, it has two irreducible components
+  $\mathcal{GM}_d'$ and&nbsp;$\mathcal{GM}_d''$, which appear as separate rows.
+
+  <dl class="condition-list">
+    <dt>$(\ast\ast^{\prime})$</dt>
+    <dd>
+      <p><strong>Pertusi's condition for an associated twisted K3 surface.</strong></p>
+      <p>$d$ satisfies&nbsp;$(\ast)$, and in the prime factorization
+      $d=\prod p_i^{n_i}$ one has&nbsp;$n_i\equiv0\pmod2$
+      for every prime&nbsp;$p_i\equiv3\pmod4$.</p>
+      <p>There is a K3 surface&nbsp;$S$ and a Brauer class&nbsp;$\alpha\in\operatorname{Br}(S)$
+      such that the Mukai lattice of&nbsp;$\operatorname{Ku}(X)$
+      is Hodge isometric to&nbsp;$\widetilde{\mathrm{H}}(S,\alpha,\mathbb{Z})$.</p>
+      <p>Introduced in
+      <a href="#references" data-reference="MR3999683">Pertusi (2019)</a>.</p>
+    </dd>
+
+    <dt>$(\ast\ast)$</dt>
+    <dd>
+      <p><strong>Debarre&ndash;Iliev&ndash;Manivel's condition for a Hodge-associated K3 surface.</strong></p>
+      <p>$d$ satisfies&nbsp;$(\ast)$,
+      is not divisible by&nbsp;$8$,
+      and every odd prime dividing&nbsp;$d$ is congruent to&nbsp;$1\pmod4$.</p>
+      <p>Equivalently,
+      $d=2(a^2+b^2)$ for some coprime integers&nbsp;$a,b$.</p>
+      <p>There is a degree-$d$ polarized K3 surface&nbsp;$S$
+      such that the primitive cohomology of&nbsp;$S$ and the vanishing cohomology of&nbsp;$X$
+      are Hodge isometric up to sign and Tate twist.</p>
+      <p>Introduced in
+      <a href="#references" data-reference="MR3380447">Debarre&ndash;Iliev&ndash;Manivel (2015)</a>.</p>
+    </dd>
+
+    <dt>$(\ast\ast\ast)$</dt>
+    <dd>
+      <p><strong>Pertusi's condition for the associated double EPW sextic
+      to be birational to a Hilbert square of a K3 surface.</strong></p>
+      <p>$d$ satisfies&nbsp;$(\ast)$ and
+      \begin{equation}
+      a^2d=2n^2+2
+      \end{equation}
+      for some integers&nbsp;$a,n$;
+      equivalently, the negative Pell equation
+      $n^2-(d/2)a^2=-1$ has an integral solution.</p>
+      <p>When the associated double EPW sextic&nbsp;$\widetilde{Y}_A$ is smooth,
+      there is a K3 surface&nbsp;$S$ such that
+      $\widetilde{Y}_A$ is birational to&nbsp;$\operatorname{Hilb}^2(S)$.</p>
+      <p>Introduced in
+      <a href="#references" data-reference="MR3999683">Pertusi (2019)</a>.</p>
+    </dd>
+  </dl>
+
+  <p>We have
+  \begin{equation}
+  (\ast\ast\ast)\Longrightarrow(\ast\ast)\Longrightarrow(\ast\ast^{\prime}).
+  \end{equation}
+
+  <p>The arithmetic entries in the K3 and Fourier&ndash;Mukai columns are computed from
+  <a href="#references" data-reference="MR4383697">Brakkee&ndash;Pertusi (2021)</a>.
+
+  <h3 id="about">About</h3>
+  <p>This is an extension of the overview of relationships between special cubic fourfolds
+  and K3 surfaces to Noether&ndash;Lefschetz divisors for Gushel&ndash;Mukai fourfolds.
+  <ul>
+    <li><a href="https://pages.uoregon.edu/adding/">Nicolas Addington</a>
+    <li><a href="https://pbelmans.ncag.info">Pieter Belmans</a>
+  </ul>
+  <p>See <a href="https://github.com/pbelmans/cubic-4-folds">the GitHub repository</a>
+  for more information and feature requests.
+</div>
+
+</body>
+</html>

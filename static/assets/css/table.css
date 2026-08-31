@@ -1,4 +1,15 @@
 table#overview {
+  width: max-content;
+  min-width: 100%;
+}
+
+table#overview caption {
+  caption-side: bottom;
+  color: #555;
+  font-size: .85em;
+  line-height: 1.45;
+  padding-top: .75rem;
+  text-align: left;
 }
 
 tr {
@@ -20,6 +31,17 @@ td {
 }
 table#overview td:not(.stars) {
   padding: 0 1em;
+}
+table#overview td small,
+table#overview th small {
+  color: #555;
+  font-size: .75em;
+  white-space: nowrap;
+}
+table#overview abbr.unknown {
+  border-bottom: 0;
+  cursor: help;
+  text-decoration: none;
 }
 td[data-property] {
   text-align: center;
@@ -48,4 +70,48 @@ tr[data-d] {
 }
 tr[data-d].active {
   background-color: #ddd;
+}
+
+.condition-list {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 1.25rem;
+  row-gap: 1.25rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.condition-list dt {
+  align-self: start;
+  min-width: 4.5rem;
+  padding-top: .1rem;
+  text-align: center;
+}
+
+.condition-list dd {
+  margin: 0;
+}
+
+.condition-list p {
+  margin: 0 0 .35rem;
+}
+
+.condition-list p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 575.98px) {
+  .condition-list {
+    grid-template-columns: 1fr;
+    row-gap: .4rem;
+  }
+
+  .condition-list dt {
+    min-width: 0;
+    text-align: left;
+  }
+
+  .condition-list dd {
+    margin-bottom: .8rem;
+  }
 }
